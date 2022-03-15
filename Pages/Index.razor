@@ -1,0 +1,32 @@
+﻿@page "/"
+@using BlazorApp.Data
+
+<div style="display:inline-flex ;width: 60%;margin:15px">
+  <FetchData OnSelectEmployee="OnSelectEmployee" />
+</div>
+
+@if (showForm)
+{
+  <div style="display:inline-flex ;margin:15px">
+    <Form employee="employee" onCancel="onCancel" />
+  </div>
+}
+
+
+@code {
+  bool showForm = false;
+
+  Employee employee = new Employee();
+
+  void OnSelectEmployee(Employee e)
+  {
+    employee = e;
+    showForm = true;
+  }
+
+  void onCancel()
+  {
+    showForm = false;
+    employee = new Employee();
+  }
+}

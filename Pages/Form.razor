@@ -1,0 +1,62 @@
+﻿@page "/form"
+@using BlazorApp.Data
+
+<EditForm Model="@employee" OnValidSubmit="@HandleValidSubmit">
+  <DataAnnotationsValidator />
+  <ValidationSummary />
+  <div >
+    <p>
+      <label>
+        Name:
+        <InputText id="name" @bind-Value="employee.FirstName" />
+      </label>
+    </p>
+    <p>
+      <label>
+        Vorname:
+        <InputText id="lastName" @bind-Value="employee.LastName" />
+      </label>
+    </p>
+    <p>
+      <label>
+        Eintrittsdatum:
+        <InputDate id="entryDate" @bind-Value="employee.EntryDate" />
+      </label>
+    </p>
+    <p>
+      <label>
+        Abteilung:
+        <InputText id="department" @bind-Value="employee.Department" />
+      </label>
+    </p>
+    <p>
+      <label>
+        Aufgaben:
+        <InputText id="task" @bind-Value="employee.Department" />
+      </label>
+    </p>
+  </div>
+
+  <div style="justify-content: space-evenly; display: flex;">
+    <button class="btn-danger" @onclick="onCancel">Abbrechen</button>
+    <button class="btn-success" type="submit">Speichem</button>
+  </div>
+
+</EditForm>
+
+@code {
+  [Parameter] public Employee employee { get; set; }
+
+  [Parameter] public EventCallback onCancel { get; set; }
+
+  async void HandleValidSubmit()
+  {
+
+    // Process the valid form
+    await OnSaveEmployee.InvokeAsync(employee);
+
+  }
+
+  [Parameter] public EventCallback<Employee> OnSaveEmployee { get; set; }
+
+}
