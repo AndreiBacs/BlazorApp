@@ -32,8 +32,17 @@
     <p>
       <label>
         Aufgaben:
-        <InputText id="task" @bind-Value="employee.Department" />
+        <InputText id="task" @bind-Value="task" />
       </label>
+    </p>
+    <p>
+      <InputSelect @bind-Value="task">
+         <option value=""></option>
+        @foreach (var task in employee.Tasks)
+        {
+            <option value="@task">@task</option>
+        }
+      </InputSelect>
     </p>
   </div>
 
@@ -45,18 +54,18 @@
 </EditForm>
 
 @code {
-  [Parameter] public Employee employee { get; set; }
+    [Parameter] public Employee employee { get; set; }
 
-  [Parameter] public EventCallback onCancel { get; set; }
+    [Parameter] public List<string> Tasks { get; set; }
 
-  async void HandleValidSubmit()
-  {
+    [Parameter] public EventCallback<Employee> OnSaveEmployee { get; set; }
 
-    // Process the valid form
-    await OnSaveEmployee.InvokeAsync(employee);
+    [Parameter] public EventCallback onCancel { get; set; }
 
-  }
+    string task;
 
-  [Parameter] public EventCallback<Employee> OnSaveEmployee { get; set; }
-
+    async void HandleValidSubmit()
+    {
+        await OnSaveEmployee.InvokeAsync(employee);
+    }
 }
