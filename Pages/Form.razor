@@ -1,6 +1,7 @@
 ﻿@page "/form"
 @using BlazorApp.Data
 @using System.Text
+@using Microsoft.Extensions.Logging
 @inject EmployeeService EmployeeService
 
 <EditForm Model="@employee" OnValidSubmit="@HandleValidSubmit">
@@ -34,7 +35,7 @@
     <p>
       <label>
         Aufgaben:
-        <InputText id="task" @bind-Value="employee.Tasks" />
+        <InputText disabled id="task" @bind-Value="employee.Tasks" />
       </label>
     </p>
     <p style="justify-content: space-evenly; display: flex;">
@@ -45,12 +46,14 @@
           <option value="@task">@task</option>
         }
       </InputSelect>
-      <button class="btn-success" @onclick="(()=> AddTask())">ADD</button>
+      <button class="btn-primary" type="button" @onclick="(()=> AddOrRemoveTask())">Add</button>
+      <button class="btn-info" type="button" @onclick="(()=> AddOrRemoveTask(true))">Remove</button>
+
     </p>
   </div>
 
   <div style="justify-content: space-evenly; display: flex;">
-    <button class="btn-danger" @onclick="onCancel">Abbrechen</button>
+    <button class="btn-danger" type="button" @onclick="onCancel">Abbrechen</button>
     <button class="btn-success" type="submit">Speichem</button>
   </div>
 
@@ -67,29 +70,38 @@
 
   private static char delim = ',';
 
-
   string task = string.Empty;
 
   async void HandleValidSubmit()
   {
+
     EmployeeService.AddOrUpdateEmployee(employee);
     await onSaveEmployee.InvokeAsync();
+
   }
 
-  public void AddTask()
+  public void AddOrRemoveTask(bool remove = false)
   {
     StringBuilder sb = new StringBuilder();
-    var tasks = employee.Tasks.Split(delim).ToList();
-    tasks.ForEach(x =>
+    var tasks = employee.Tasks.Split(delim).ToHashSet();
+    if (remove)
     {
-      if (x.ToLower() != task.ToLower())
+      tasks.Remove(task);
+    }
+    else
+    {
+      tasks.Add(task);
+    }
+
+    tasks.ToList().ForEach(x =>
+    {
+      if (sb.Length > 0)
       {
-        if (sb.Length > 0)
-        {
-          sb.Append(delim);
-        }
-        sb.Append(task);
+        sb.Append(delim);
       }
+      sb.Append(x);
     });
+
+    employee.Tasks = sb.ToString();
   }
 }
