@@ -1,5 +1,6 @@
 ﻿@page "/form"
 @using BlazorApp.Data
+@using System.Text
 @inject EmployeeService EmployeeService
 
 <EditForm Model="@employee" OnValidSubmit="@HandleValidSubmit">
@@ -36,7 +37,7 @@
         <InputText id="task" @bind-Value="employee.Tasks" />
       </label>
     </p>
-    <p>
+    <p style="justify-content: space-evenly; display: flex;">
       <InputSelect @bind-Value="task">
         <option value=""></option>
         @foreach (var task in Tasks)
@@ -44,6 +45,7 @@
           <option value="@task">@task</option>
         }
       </InputSelect>
+      <button class="btn-success" @onclick="(()=> AddTask())">ADD</button>
     </p>
   </div>
 
@@ -63,11 +65,31 @@
 
   [Parameter] public EventCallback onCancel { get; set; }
 
-  string task;
+  private static char delim = ',';
+
+
+  string task = string.Empty;
 
   async void HandleValidSubmit()
   {
     EmployeeService.AddOrUpdateEmployee(employee);
     await onSaveEmployee.InvokeAsync();
+  }
+
+  public void AddTask()
+  {
+    StringBuilder sb = new StringBuilder();
+    var tasks = employee.Tasks.Split(delim).ToList();
+    tasks.ForEach(x =>
+    {
+      if (x.ToLower() != task.ToLower())
+      {
+        if (sb.Length > 0)
+        {
+          sb.Append(delim);
+        }
+        sb.Append(task);
+      }
+    });
   }
 }

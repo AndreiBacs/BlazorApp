@@ -38,7 +38,14 @@ else
 
   private List<Employee> employees;
 
+  [Parameter] public EventCallback<Employee> OnSelectEmployee { get; set; }
+
   protected override async Task OnInitializedAsync()
+  {
+    employees = await EmployeeService.GetEmployees();
+  }
+
+  public async void GetEmployees()
   {
     employees = await EmployeeService.GetEmployees();
   }
@@ -47,6 +54,4 @@ else
   {
     await OnSelectEmployee.InvokeAsync(employee);
   }
-
-  [Parameter] public EventCallback<Employee> OnSelectEmployee { get; set; }
 }

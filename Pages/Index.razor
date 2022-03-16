@@ -3,7 +3,7 @@
 @using System.Xml.Linq
 
 <div style="display:inline-flex ;width: 60%;margin:15px">
-  <FetchData OnSelectEmployee="OnSelectEmployee" />
+  <FetchData @ref="fetchData" OnSelectEmployee="OnSelectEmployee" />
 </div>
 
 @if (showForm)
@@ -19,6 +19,7 @@
   bool refresh = false;
 
   Employee employee = new Employee();
+  FetchData fetchData;
 
   List<string> Tasks = new List<string>();
 
@@ -44,7 +45,6 @@
   {
     showForm = false;
     employee = new Employee();
-    refresh = true;
-
+    fetchData.GetEmployees();
   }
 }
