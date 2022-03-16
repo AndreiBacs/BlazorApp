@@ -1,16 +1,45 @@
 ﻿using AutoFixture;
+using Microsoft.EntityFrameworkCore;
 
 namespace BlazorApp.Data
 {
   public class EmployeeService
   {
-    public Task<List<Employee>> GetEmployees()
+    private readonly HAMMERContext _context;
+
+    public EmployeeService(HAMMERContext context)
     {
-      var fixture = new Fixture();
+      _context = context;
+    }
 
-      var employees = fixture.Create<List<Employee>>();
+    public async Task<List<Employee>> GetEmployees()
+    {
+      //var fixture = new Fixture();
 
-      return Task.FromResult(employees);
+      //var employees = fixture.Create<List<Employee>>();
+
+      //return Task.FromResult(employees);
+
+      return await _context.Employee.ToListAsync();
+    }
+
+    public void AddOrUpdateEmployee(Employee employee)
+    {
+      var model = employee.Id > 0 ? _context.Employee.Where(x => x.Id == employee.Id).FirstOrDefault() : employee;
+      if (model?.Id > 0)
+      {
+        model.FirstName = employee.FirstName;
+        model.LastName = employee.LastName;
+        model.Department = employee.Department;
+        model.EntryDate = employee.EntryDate;
+        model.Tasks = employee.Tasks;
+      }
+      else
+      {
+        _context.Employee.Add(model);
+      }
+
+      _context.SaveChanges();
     }
   }
 }

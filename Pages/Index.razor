@@ -9,22 +9,23 @@
 @if (showForm)
 {
   <div style="display:inline-flex ;margin:15px">
-    <Form employee="employee" Tasks="Tasks" onCancel="onCancel" />
+    <Form employee="employee" Tasks="Tasks" onCancel="onCancel" onSaveEmployee="OnSaveEmployee" />
   </div>
 }
 
 
 @code {
   bool showForm = false;
+  bool refresh = false;
 
   Employee employee = new Employee();
 
   List<string> Tasks = new List<string>();
 
-  protected override void OnInitialized()    
+  protected override void OnInitialized()
   {
-      XDocument doc = XDocument.Load("Tasks.xml"); 
-      Tasks = doc.Root.Elements("task").Select(x=>x.Value).ToList();
+    XDocument doc = XDocument.Load("Tasks.xml");
+    Tasks = doc.Root.Elements("task").Select(x => x.Value).ToList();
   }
 
   void OnSelectEmployee(Employee e)
@@ -37,5 +38,13 @@
   {
     showForm = false;
     employee = new Employee();
+  }
+
+  void OnSaveEmployee()
+  {
+    showForm = false;
+    employee = new Employee();
+    refresh = true;
+
   }
 }

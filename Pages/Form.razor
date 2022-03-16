@@ -1,10 +1,11 @@
 ﻿@page "/form"
 @using BlazorApp.Data
+@inject EmployeeService EmployeeService
 
 <EditForm Model="@employee" OnValidSubmit="@HandleValidSubmit">
   <DataAnnotationsValidator />
   <ValidationSummary />
-  <div >
+  <div>
     <p>
       <label>
         Name:
@@ -32,15 +33,15 @@
     <p>
       <label>
         Aufgaben:
-        <InputText id="task" @bind-Value="task" />
+        <InputText id="task" @bind-Value="employee.Tasks" />
       </label>
     </p>
     <p>
       <InputSelect @bind-Value="task">
-         <option value=""></option>
-        @foreach (var task in employee.Tasks)
+        <option value=""></option>
+        @foreach (var task in Tasks)
         {
-            <option value="@task">@task</option>
+          <option value="@task">@task</option>
         }
       </InputSelect>
     </p>
@@ -54,18 +55,19 @@
 </EditForm>
 
 @code {
-    [Parameter] public Employee employee { get; set; }
+  [Parameter] public Employee employee { get; set; }
 
-    [Parameter] public List<string> Tasks { get; set; }
+  [Parameter] public List<string> Tasks { get; set; }
 
-    [Parameter] public EventCallback<Employee> OnSaveEmployee { get; set; }
+  [Parameter] public EventCallback onSaveEmployee { get; set; }
 
-    [Parameter] public EventCallback onCancel { get; set; }
+  [Parameter] public EventCallback onCancel { get; set; }
 
-    string task;
+  string task;
 
-    async void HandleValidSubmit()
-    {
-        await OnSaveEmployee.InvokeAsync(employee);
-    }
+  async void HandleValidSubmit()
+  {
+    EmployeeService.AddOrUpdateEmployee(employee);
+    await onSaveEmployee.InvokeAsync();
+  }
 }
