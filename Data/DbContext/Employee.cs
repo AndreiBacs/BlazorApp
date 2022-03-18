@@ -9,6 +9,7 @@ namespace BlazorApp.Data
   public partial class Employee
   {
     public int Id { get; set; }
+
     [Required]
     public string LastName { get; set; }
 
@@ -23,5 +24,7 @@ namespace BlazorApp.Data
 
     [Required]
     public string Tasks { get; set; }
+
+    public bool IsArchived { get; set; }
   }
 }

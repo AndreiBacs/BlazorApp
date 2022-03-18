@@ -18,16 +18,18 @@ else
         <th>Vorname</th>
         <th>Abteilung</th>
         <th>Eintrittsdatum</th>
+        <th></th>
       </tr>
     </thead>
     <tbody>
       @foreach (var employee in employees)
       {
-        <tr @onclick="(()=> SelectItems(employee))">
-          <td>@employee.FirstName</td>
-          <td>@employee.LastName</td>
-          <td>@employee.Department</td>
-          <td>@employee.EntryDate.ToString("dd.MM.yyyy")</td>
+        <tr>
+          <td @onclick="(()=> SelectItems(employee))">@employee.FirstName</td>
+          <td @onclick="(()=> SelectItems(employee))">@employee.LastName</td>
+          <td @onclick="(()=> SelectItems(employee))">@employee.Department</td>
+          <td @onclick="(()=> SelectItems(employee))">@employee.EntryDate.ToString("dd.MM.yyyy")</td>
+          <td><button class="btn-close" type="button" @onclick="( async ()=> await Archive(employee))"></button></td>
         </tr>
       }
     </tbody>
@@ -36,16 +38,16 @@ else
 
 @code {
 
-  private List<Employee> employees;
+  public List<Employee> employees;
 
   [Parameter] public EventCallback<Employee> OnSelectEmployee { get; set; }
 
   protected override async Task OnInitializedAsync()
   {
-    employees = await EmployeeService.GetEmployees();
+    await GetEmployees();
   }
 
-  public async void GetEmployees()
+  public async Task GetEmployees()
   {
     employees = await EmployeeService.GetEmployees();
   }
@@ -53,5 +55,12 @@ else
   async void SelectItems(Employee employee)
   {
     await OnSelectEmployee.InvokeAsync(employee);
+  }
+
+  public async Task Archive(Employee employee)
+  {
+    await EmployeeService.ArchiveEmployee(employee);
+    await GetEmployees();
+    SelectItems(null);
   }
 }

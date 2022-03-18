@@ -15,6 +15,7 @@ CREATE TABLE [dbo].[Employee](
 	[Department] [nvarchar](max) NOT NULL,
 	[EntryDate] [datetime] NOT NULL,
 	[Tasks] [nvarchar](max) NOT NULL,
+	[IsArchived] [bit] NOT NULL
 PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
@@ -22,4 +23,14 @@ PRIMARY KEY CLUSTERED
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
 
+ALTER TABLE [dbo].[Employee] ADD  DEFAULT ((0)) FOR [IsArchived]
 
+GO
+
+INSERT INTO [dbo].[Employee]([LastName],[FirstName],[Department],[EntryDate],[Tasks],[IsArchived]) VALUES ('Mark','Weiss','Comunications',GETDATE(),'Task1',0)
+INSERT INTO [dbo].[Employee]([LastName],[FirstName],[Department],[EntryDate],[Tasks],[IsArchived]) VALUES ('Andrew','Low','IT',GETDATE(),'Task2',0)
+INSERT INTO [dbo].[Employee]([LastName],[FirstName],[Department],[EntryDate],[Tasks],[IsArchived]) VALUES ('Jimmy','John','IT',GETDATE(),'Task2',0)
+INSERT INTO [dbo].[Employee]([LastName],[FirstName],[Department],[EntryDate],[Tasks],[IsArchived]) VALUES ('Dan','Devito','Staff',GETDATE(),'Task2',0)
+INSERT INTO [dbo].[Employee]([LastName],[FirstName],[Department],[EntryDate],[Tasks],[IsArchived]) VALUES ('Rachel','Weiss','Staff',GETDATE(),'Task2',0)
+INSERT INTO [dbo].[Employee]([LastName],[FirstName],[Department],[EntryDate],[Tasks],[IsArchived]) VALUES ('Tania','Weiss','IT',GETDATE(),'Task2,Task3',0)
+GO

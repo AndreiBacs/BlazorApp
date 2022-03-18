@@ -20,7 +20,7 @@ namespace BlazorApp.Data
 
       //return Task.FromResult(employees);
 
-      return await _context.Employee.ToListAsync();
+      return await _context.Employee.Where(x => !x.IsArchived).ToListAsync();
     }
 
     public void AddOrUpdateEmployee(Employee employee)
@@ -39,6 +39,16 @@ namespace BlazorApp.Data
         _context.Employee.Add(model);
       }
 
+      _context.SaveChanges();
+    }
+
+    public async Task ArchiveEmployee(Employee employee)
+    {
+      var model = _context.Employee.Find(employee.Id);
+      if (model != null)
+      {
+        model.IsArchived = true;
+      }
       _context.SaveChanges();
     }
   }

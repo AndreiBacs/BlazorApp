@@ -31,7 +31,7 @@
   void OnSelectEmployee(Employee e)
   {
     employee = e;
-    showForm = true;
+    showForm = e != null;
   }
 
   void onCancel()

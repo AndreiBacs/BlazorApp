@@ -74,10 +74,8 @@
 
   async void HandleValidSubmit()
   {
-
     EmployeeService.AddOrUpdateEmployee(employee);
     await onSaveEmployee.InvokeAsync();
-
   }
 
   public void AddOrRemoveTask(bool remove = false)
@@ -90,7 +88,8 @@
     }
     else
     {
-      tasks.Add(task);
+      if (!string.IsNullOrWhiteSpace(task))
+        tasks.Add(task);
     }
 
     tasks.ToList().ForEach(x =>
