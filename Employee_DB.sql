@@ -1,12 +1,3 @@
-USE [HAMMER]
-GO
-
-/****** Object:  Table [dbo].[Employee]    Script Date: 3/17/2022 12:23:28 AM ******/
-SET ANSI_NULLS ON
-GO
-
-SET QUOTED_IDENTIFIER ON
-GO
 
 CREATE TABLE [dbo].[Employee](
 	[Id] [int] IDENTITY(1,1) NOT NULL,
