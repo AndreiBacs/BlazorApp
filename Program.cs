@@ -1,5 +1,6 @@
 using BlazorApp.Data;
 using Microsoft.EntityFrameworkCore;
+using MudBlazor.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,6 +10,7 @@ builder.Services.AddServerSideBlazor();
 builder.Services.AddScoped<EmployeeService>();
 
 builder.Services.AddDbContext<HAMMERContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddMudServices();
 
 var app = builder.Build();
 

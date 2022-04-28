@@ -6,25 +6,25 @@ using System.ComponentModel.DataAnnotations;
 
 namespace BlazorApp.Data
 {
-  public partial class Employee
-  {
-    public int Id { get; set; }
+    public partial class Employee
+    {
+        public int Id { get; set; }
 
-    [Required]
-    public string LastName { get; set; }
+        [Required]
+        public string LastName { get; set; }
 
-    [Required]
-    public string FirstName { get; set; }
+        [Required]
+        public string FirstName { get; set; }
 
-    [Required]
-    public string Department { get; set; }
+        [Required]
+        public string Department { get; set; }
 
-    [Required]
-    public DateTime EntryDate { get; set; }
+        [Required]
+        public DateTime? EntryDate { get; set; }
 
-    [Required]
-    public string Tasks { get; set; }
+        [Required]
+        public string Tasks { get; set; }
 
-    public bool IsArchived { get; set; }
-  }
+        public bool IsArchived { get; set; }
+    }
 }

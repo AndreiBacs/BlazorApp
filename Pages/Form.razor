@@ -5,102 +5,78 @@
 @inject EmployeeService EmployeeService
 
 <EditForm Model="@employee" OnValidSubmit="@HandleValidSubmit">
-  <DataAnnotationsValidator />
-  <ValidationSummary />
-  <div>
-    <p>
-      <label>
-        Name:
-        <InputText id="name" @bind-Value="employee.FirstName" />
-      </label>
-    </p>
-    <p>
-      <label>
-        Vorname:
-        <InputText id="lastName" @bind-Value="employee.LastName" />
-      </label>
-    </p>
-    <p>
-      <label>
-        Eintrittsdatum:
-        <InputDate id="entryDate" @bind-Value="employee.EntryDate" />
-      </label>
-    </p>
-    <p>
-      <label>
-        Abteilung:
-        <InputText id="department" @bind-Value="employee.Department" />
-      </label>
-    </p>
-    <p>
-      <label>
-        Aufgaben:
-        <InputText disabled id="task" @bind-Value="employee.Tasks" />
-      </label>
-    </p>
-    <p style="justify-content: space-evenly; display: flex;">
-      <InputSelect @bind-Value="task">
-        <option value=""></option>
-        @foreach (var task in Tasks)
-        {
-          <option value="@task">@task</option>
-        }
-      </InputSelect>
-      <button class="btn-primary" type="button" @onclick="(()=> AddOrRemoveTask())">Add</button>
-      <button class="btn-info" type="button" @onclick="(()=> AddOrRemoveTask(true))">Remove</button>
-
-    </p>
-  </div>
-
-  <div style="justify-content: space-evenly; display: flex;">
-    <button class="btn-danger" type="button" @onclick="onCancel">Abbrechen</button>
-    <button class="btn-success" type="submit">Speichem</button>
-  </div>
-
+    <DataAnnotationsValidator />
+    <MudCard>
+        <MudCardContent>
+            <MudTextField Label="Name:" @bind-Value="employee.FirstName" For="@(() => employee.FirstName)" />
+            <MudTextField Label="Vorname:" @bind-Value="employee.LastName" For="@(() => employee.LastName)" />
+            <MudDatePicker Label="Eintrittsdatum:" Editable="true" @bind-Date="employee.EntryDate" For="@(() => employee.EntryDate)" />
+            <MudTextField Label="Abteilung:" @bind-Value=" employee.Department" For="@(() => employee.Department)" />
+            <MudTextField Label="Aufgaben:" Disabled="true" @bind-Value=" employee.Tasks" For="@(() => employee.Tasks)" />
+        </MudCardContent>
+        <MudCardContent>
+            <MudSelect @bind-Value="task" Label="Task" AnchorOrigin="Origin.BottomCenter" Class="m-auto" Variant="Variant.Outlined" Margin="Margin.Dense">
+                @foreach (var task in Tasks)
+                {
+                    <MudSelectItem Value="@task">@task</MudSelectItem>
+                }
+            </MudSelect>
+        </MudCardContent>
+        <MudCardActions>
+            <MudButton ButtonType="ButtonType.Button" StartIcon="@Icons.Material.Filled.Save" Variant="Variant.Filled" Color="Color.Primary" Class="m-auto" OnClick="(()=>AddOrRemoveTask())">Add</MudButton>
+            <MudButton ButtonType="ButtonType.Button" StartIcon="@Icons.Material.Filled.Delete" Variant="Variant.Filled" Color="Color.Info" Class="m-auto" OnClick="(()=>AddOrRemoveTask(true))">Remove</MudButton>
+        </MudCardActions>
+    </MudCard>
+    <MudCard Style="margin-top:15px">
+        <MudCardActions>
+            <MudButton ButtonType="ButtonType.Button" Variant="Variant.Filled" Color="Color.Error" Class="m-auto" OnClick="onCancel">Abbrechen</MudButton>
+            <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Success" Class="m-auto">Speichem</MudButton>
+        </MudCardActions>
+    </MudCard>
 </EditForm>
 
 @code {
-  [Parameter] public Employee employee { get; set; }
+    [Parameter] public Employee employee { get; set; }
 
-  [Parameter] public List<string> Tasks { get; set; }
+    [Parameter] public List<string> Tasks { get; set; }
 
-  [Parameter] public EventCallback onSaveEmployee { get; set; }
+    [Parameter] public EventCallback onSaveEmployee { get; set; }
 
-  [Parameter] public EventCallback onCancel { get; set; }
+    [Parameter] public EventCallback onCancel { get; set; }
 
-  private static char delim = ',';
+    private static char delim = ',';
 
-  string task = string.Empty;
+    string task = string.Empty;
 
-  async void HandleValidSubmit()
-  {
-    EmployeeService.AddOrUpdateEmployee(employee);
-    await onSaveEmployee.InvokeAsync();
-  }
-
-  public void AddOrRemoveTask(bool remove = false)
-  {
-    StringBuilder sb = new StringBuilder();
-    var tasks = employee.Tasks.Split(delim).ToHashSet();
-    if (remove)
+    async void HandleValidSubmit()
     {
-      tasks.Remove(task);
-    }
-    else
-    {
-      if (!string.IsNullOrWhiteSpace(task))
-        tasks.Add(task);
+        EmployeeService.AddOrUpdateEmployee(employee);
+        await onSaveEmployee.InvokeAsync();
     }
 
-    tasks.ToList().ForEach(x =>
+    public void AddOrRemoveTask(bool remove = false)
     {
-      if (sb.Length > 0)
-      {
-        sb.Append(delim);
-      }
-      sb.Append(x);
-    });
+        StringBuilder sb = new StringBuilder();
+        var tasks = employee.Tasks.Split(delim).ToHashSet();
+        if (remove)
+        {
+            tasks.Remove(task);
+        }
+        else
+        {
+            if (!string.IsNullOrWhiteSpace(task))
+                tasks.Add(task);
+        }
 
-    employee.Tasks = sb.ToString();
-  }
+        tasks.ToList().ForEach(x =>
+        {
+            if (sb.Length > 0)
+            {
+                sb.Append(delim);
+            }
+            sb.Append(x);
+        });
+
+        employee.Tasks = sb.ToString();
+    }
 }

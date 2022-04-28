@@ -2,48 +2,49 @@
 @using BlazorApp.Data
 @using System.Xml.Linq
 
-<div style="display:inline-flex ;width: 60%;margin:15px">
-  <FetchData @ref="fetchData" OnSelectEmployee="OnSelectEmployee" />
-</div>
-
-@if (showForm)
-{
-  <div style="display:inline-flex ;margin:15px">
-    <Form employee="employee" Tasks="Tasks" onCancel="onCancel" onSaveEmployee="OnSaveEmployee" />
-  </div>
-}
+<MudGrid>
+    <MudItem md="9">
+        <FetchData @ref="fetchData" OnSelectEmployee="OnSelectEmployee" />
+    </MudItem>
+    @if (showForm)
+    {
+        <MudItem md="3">
+            <Form employee="employee" Tasks="Tasks" onCancel="onCancel" onSaveEmployee="OnSaveEmployee" />
+        </MudItem>
+    }
+</MudGrid>
 
 
 @code {
-  bool showForm = false;
+    bool showForm = false;
 
-  Employee employee = new Employee();
-  FetchData fetchData;
+    Employee employee = new Employee();
+    FetchData fetchData;
 
-  List<string> Tasks = new List<string>();
+    List<string> Tasks = new List<string>();
 
-  protected override void OnInitialized()
-  {
-    XDocument doc = XDocument.Load("Tasks.xml");
-    Tasks = doc.Root.Elements("task").Select(x => x.Value).ToList();
-  }
+    protected override void OnInitialized()
+    {
+        XDocument doc = XDocument.Load("Tasks.xml");
+        Tasks = doc.Root.Elements("task").Select(x => x.Value).ToList();
+    }
 
-  void OnSelectEmployee(Employee e)
-  {
-    employee = e;
-    showForm = e != null;
-  }
+    void OnSelectEmployee(Employee e)
+    {
+        employee = e;
+        showForm = e != null;
+    }
 
-  void onCancel()
-  {
-    showForm = false;
-    employee = new Employee();
-  }
+    void onCancel()
+    {
+        showForm = false;
+        employee = new Employee();
+    }
 
-  void OnSaveEmployee()
-  {
-    showForm = false;
-    employee = new Employee();
-    fetchData.GetEmployees();
-  }
+    void OnSaveEmployee()
+    {
+        showForm = false;
+        employee = new Employee();
+        fetchData.GetEmployees();
+    }
 }
