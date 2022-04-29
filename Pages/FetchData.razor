@@ -2,10 +2,9 @@
 
 <PageTitle>Employees</PageTitle>
 
-@using BlazorApp.Data
-@inject EmployeeService EmployeeService
+@inject IEmployeeService EmployeeService
 
-<MudTable Items="@employees" Hover="true" OnRowClick="RowClickEvent" T="Employee" Loading="employees==null" SortLabel="Sort By" Breakpoint="Breakpoint.Md" Striped="true">
+<MudTable Items="@EmployeeService.Employees" Hover="true" OnRowClick="RowClickEvent" T="Employee" Loading="!EmployeeService.Employees.Any()" SortLabel="Sort By" Breakpoint="Breakpoint.Md" Striped="true">
     <HeaderContent>
         <MudTh>
             <MudTableSortLabel SortBy="new Func<Employee, object>(x=>x.FirstName)">Name</MudTableSortLabel>
@@ -27,7 +26,7 @@
         <MudTd DataLabel="Abteilung">@context.Department</MudTd>
         <MudTd DataLabel="Eintrittsdatum">@context.EntryDate.Value.ToShortDateString()</MudTd>
         <MudTd DataLabel="Action">
-            <MudButton ButtonType="ButtonType.Button" StartIcon="@Icons.Material.Filled.Delete" OnClick="@(async ()=> await Archive(@context))"></MudButton>
+            <MudFab ButtonType="ButtonType.Button" Color="Color.Warning" StartIcon="@Icons.Material.Filled.Delete" OnClick="@(async ()=> await Archive(@context))"></MudFab>
         </MudTd>
     </RowTemplate>
     <PagerContent>
@@ -37,18 +36,11 @@
 
 @code {
 
-    public List<Employee> employees;
-
     [Parameter] public EventCallback<Employee> OnSelectEmployee { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        await GetEmployees();
-    }
-
-    public async Task GetEmployees()
-    {
-        employees = await EmployeeService.GetEmployees();
+        await EmployeeService.GetEmployees();
     }
 
     private async void RowClickEvent(TableRowClickEventArgs<Employee> tableRowClickEventArgs)
@@ -63,8 +55,8 @@
 
     public async Task Archive(Employee employee)
     {
-        await EmployeeService.ArchiveEmployee(employee);
-        await GetEmployees();
+        EmployeeService.ArchiveEmployee(employee);
+        await EmployeeService.GetEmployees();
         SelectItems(null);
     }
 }

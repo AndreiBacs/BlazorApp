@@ -1,8 +1,6 @@
 ﻿@page "/form"
-@using BlazorApp.Data
-@using System.Text
-@using Microsoft.Extensions.Logging
-@inject EmployeeService EmployeeService
+
+@inject IEmployeeService EmployeeService
 
 <EditForm Model="@employee" OnValidSubmit="@HandleValidSubmit">
     <DataAnnotationsValidator />
@@ -23,8 +21,8 @@
             </MudSelect>
         </MudCardContent>
         <MudCardActions>
-            <MudButton ButtonType="ButtonType.Button" StartIcon="@Icons.Material.Filled.Save" Variant="Variant.Filled" Color="Color.Primary" Class="m-auto" OnClick="(()=>AddOrRemoveTask())">Add</MudButton>
-            <MudButton ButtonType="ButtonType.Button" StartIcon="@Icons.Material.Filled.Delete" Variant="Variant.Filled" Color="Color.Info" Class="m-auto" OnClick="(()=>AddOrRemoveTask(true))">Remove</MudButton>
+            <MudFab ButtonType="ButtonType.Button" StartIcon="@Icons.Material.Filled.Save" Variant="Variant.Filled" Color="Color.Primary" Class="m-auto" OnClick="(()=>AddOrRemoveTask())">Add</MudFab>
+            <MudFab ButtonType="ButtonType.Button" StartIcon="@Icons.Material.Filled.Delete" Variant="Variant.Filled" Color="Color.Info" Class="m-auto" OnClick="(()=>AddOrRemoveTask(true))">Remove</MudFab>
         </MudCardActions>
     </MudCard>
     <MudCard Style="margin-top:15px">

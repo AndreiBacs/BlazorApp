@@ -1,10 +1,9 @@
 ﻿@page "/"
-@using BlazorApp.Data
-@using System.Xml.Linq
+@inject IEmployeeService EmployeeService
 
 <MudGrid>
     <MudItem md="9">
-        <FetchData @ref="fetchData" OnSelectEmployee="OnSelectEmployee" />
+        <FetchData OnSelectEmployee="OnSelectEmployee" />
     </MudItem>
     @if (showForm)
     {
@@ -14,13 +13,10 @@
     }
 </MudGrid>
 
-
 @code {
     bool showForm = false;
 
     Employee employee = new Employee();
-    FetchData fetchData;
-
     List<string> Tasks = new List<string>();
 
     protected override void OnInitialized()
@@ -41,10 +37,10 @@
         employee = new Employee();
     }
 
-    void OnSaveEmployee()
+    async Task OnSaveEmployee()
     {
         showForm = false;
         employee = new Employee();
-        fetchData.GetEmployees();
+        await EmployeeService.GetEmployees();
     }
 }
