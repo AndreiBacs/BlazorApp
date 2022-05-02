@@ -5,16 +5,13 @@
 <MudSnackbarProvider />
 
 <MudLayout>
-    <MudAppBar Elevation="0" Color="Color.Inherit">
+    <MudAppBar Elevation="0" Dense="true">
         <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@(() => DrawerToggle())" />
-        <MudText Typo="Typo.h4">Mitarbeiterverwaltung</MudText>
+        <MudText Typo="Typo.h5">Mitarbeiterverwaltung</MudText>
         <MudSpacer />
-        <MudToggleIconButton @bind-Toggled="@_isDarkMode" Color="Color.Warning" Icon="@Icons.Filled.DarkMode" ToggledIcon="@Icons.Filled.LightMode" />
+        <MudToggleIconButton @bind-Toggled="@_isDarkMode" Color="Color.Inherit" Icon="@Icons.TwoTone.DarkMode" ToggledIcon="@Icons.Filled.LightMode" />
     </MudAppBar>
-    <MudDrawer @bind-Open="_drawerOpen" Elevation="1" Color="Color.Inherit">
-        <MudDrawerHeader>
-            <MudText Typo="Typo.h6">BlazorApp</MudText>
-        </MudDrawerHeader>
+    <MudDrawer @bind-Open="_drawerOpen" Elevation="1" Color="Color.Inherit" ClipMode="DrawerClipMode.Docked" Variant="DrawerVariant.Mini">
         <NavMenu />
     </MudDrawer>
     <MudMainContent>
@@ -25,8 +22,14 @@
 </MudLayout>
 
 @code {
-    bool _drawerOpen = true;
-    private MudTheme _theme = new();
+    bool _drawerOpen = false;
+    private MudTheme _theme = new MudTheme
+        {
+            Palette = new Palette
+            {
+                AppbarBackground = Colors.Indigo.Default,
+            }
+        };
     private bool _isDarkMode;
 
     void DrawerToggle()
