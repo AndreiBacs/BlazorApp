@@ -1,0 +1,165 @@
+﻿@page "/chatroom"
+@inject NavigationManager navigationManager
+@inject ISnackbar Snackbar
+
+<PageTitle>Chat</PageTitle>
+
+
+<MudGrid Class="d-flex justify-center">
+    <MudItem md="6">
+        <MudCard>
+            <MudCardHeader>
+                <CardHeaderContent>
+                    <MudText Typo="Typo.h3">
+                        Chat
+                    </MudText>
+                </CardHeaderContent>
+
+            </MudCardHeader>
+            <MudCardContent>
+                @if (!_isChatting)
+                {
+                    <MudText Align="Align.Center">Enter your name:</MudText>
+                    <MudTextField @bind-Value="_username" Variant="Variant.Text"></MudTextField>
+
+                    @if (!string.IsNullOrWhiteSpace(_message))
+                    {
+                        <MudAlert Severity="Severity.Error">@_message</MudAlert>
+                    }
+                }
+                else
+                {
+                    <MudGrid Class="mb-2">
+                        <MudItem md="9">
+                            <MudText>Connected as: @_username</MudText>
+                        </MudItem>
+                        <MudItem md="3">
+                            <MudButton ButtonType="ButtonType.Button" OnClick="DisconnectAsync" Variant="Variant.Filled" Color="Color.Error">Disconect</MudButton>
+                        </MudItem>
+                    </MudGrid>
+                    <MudCard>
+                        <MudCardContent>
+                            <MudStack Justify="Justify.Center" AlignItems="AlignItems.Stretch" Spacing="2" Class="mt-3">
+                                @foreach (var item in _messages)
+                                {
+                                    @if (item.IsNotice)
+                                    {
+                                        <MudPaper Class="py-1 px-3 mud-theme-info">@item.Body</MudPaper>
+                                    }
+                                    else
+                                    {
+                                        <MudPaper Class="py-3 px-3" Style="@($"color:{Colors.Shades.White}; background:{@item.CSS};")">@item.Username sent message at @item.TimeSent : @item.Body</MudPaper>
+                                    }
+
+                                }
+                            </MudStack>
+                        </MudCardContent>
+                    </MudCard>
+
+                    <MudTextField @bind-Value="_newMessage" Variant="Variant.Outlined" Label="Message:" />
+                }
+            </MudCardContent>
+            <MudCardActions>
+                @if (!_isChatting)
+                {
+                    <MudButton ButtonType="ButtonType.Button" OnClick="StartChat" Variant="Variant.Filled" Color="Color.Primary" Class="m-auto" FullWidth="true">Chat</MudButton>
+                }
+                else
+                {
+                    <MudButton ButtonType="ButtonType.Button" OnClick="@(()=>SendAsync(_newMessage))" @onkeypress="@Enter" Variant="Variant.Filled" Class="m-auto" FullWidth="true">Send</MudButton>
+                }
+
+            </MudCardActions>
+        </MudCard>
+    </MudItem>
+</MudGrid>
+
+@code {
+    private bool _isChatting = false;
+    private string _username = string.Empty;
+    private string _message = string.Empty;
+    private string _newMessage = string.Empty;
+
+    private List<Message> _messages = new List<Message>();
+
+    private string _hubUrl = string.Empty;
+    private HubConnection _hubConnection;
+
+    public void Enter(KeyboardEventArgs e)
+    {
+        if (e.Code == "Enter" || e.Code == "NumpadEnter")
+        {
+            SendAsync(_newMessage);
+        }
+    }
+
+    public async Task StartChat()
+    {
+        if (string.IsNullOrWhiteSpace(_username))
+        {
+            _message = "Enter a name";
+            return;
+        }
+
+        try
+        {
+            _isChatting = true;
+            await Task.Delay(1);
+
+            _messages.Clear();
+
+            var baseUrl = navigationManager.BaseUri;
+            _hubUrl = baseUrl.TrimEnd('/') + ChatHub.HubUrl;
+
+            _hubConnection = new HubConnectionBuilder()
+                .WithUrl(_hubUrl)
+                .Build();
+
+            _hubConnection.On<string, string>("Broadcast", BroadcastMessage);
+            await _hubConnection.StartAsync();
+            await SendAsync($"[Notice] {_username} joined chat room.");
+
+        }
+        catch (Exception e)
+        {
+            _message = $"ERROR: Failed to start chat client: {e.Message}";
+            _isChatting = false;
+        }
+    }
+
+    private void BroadcastMessage(string name, string message)
+    {
+        bool isMine = name.Equals(_username, StringComparison.OrdinalIgnoreCase);
+
+        _messages.Add(new Message(name, message, isMine));
+
+        StateHasChanged();
+    }
+
+    private async Task SendAsync(string message)
+    {
+        if (_isChatting && !string.IsNullOrWhiteSpace(message))
+        {
+            await _hubConnection.SendAsync("Broadcast", _username, message);
+
+            _newMessage = string.Empty;
+        }
+    }
+
+    private async Task DisconnectAsync()
+    {
+        if (_isChatting)
+        {
+            await SendAsync($"[Notice] {_username} left chat room.");
+
+            await _hubConnection.StopAsync();
+            await _hubConnection.DisposeAsync();
+
+            _hubConnection = null;
+            _isChatting = false;
+            _username = string.Empty;
+        }
+    }
+
+
+}

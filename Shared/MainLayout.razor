@@ -15,15 +15,16 @@
         <NavMenu />
     </MudDrawer>
     <MudMainContent>
-        <MudContainer MaxWidth="MaxWidth.Large" Class="my-16 pt-16">
+        <MudContainer MaxWidth="MaxWidth.Large" Class="my-2 pt-16">
             @Body
         </MudContainer>
     </MudMainContent>
+
 </MudLayout>
 
 @code {
     bool _drawerOpen = false;
-    private MudTheme _theme = new MudTheme
+    public MudTheme _theme = new MudTheme
         {
             Palette = new Palette
             {
