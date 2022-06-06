@@ -1,4 +1,5 @@
 ﻿@inherits LayoutComponentBase
+@inject NavigationManager Navigation
 
 <MudThemeProvider @bind-IsDarkMode="@_isDarkMode" Theme="_theme" />
 <MudDialogProvider />
@@ -9,6 +10,23 @@
         <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@(() => DrawerToggle())" />
         <MudText Typo="Typo.h5">Mitarbeiterverwaltung</MudText>
         <MudSpacer />
+        @if (false)
+        {
+            <MudMenu ActivationEvent="@MouseEvent.MouseOver" AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopRight">
+                <ActivatorContent>
+                    <MudAvatar Color="Color.Primary">M</MudAvatar>
+                </ActivatorContent>
+                <ChildContent>
+                    <MudMenuItem OnClick="()=>NavigateToProfile()">Profile</MudMenuItem>
+                    <MudMenuItem>Sign Out</MudMenuItem>
+                </ChildContent>
+            </MudMenu>
+        }
+        else
+        {
+            <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Login" Color="Color.Primary">Login</MudButton>
+        }
+
         <MudToggleIconButton @bind-Toggled="@_isDarkMode" Color="Color.Inherit" Icon="@Icons.TwoTone.DarkMode" ToggledIcon="@Icons.Filled.LightMode" />
     </MudAppBar>
     <MudDrawer @bind-Open="_drawerOpen" Elevation="1" Color="Color.Inherit" ClipMode="DrawerClipMode.Docked" Variant="DrawerVariant.Mini">
@@ -36,6 +54,10 @@
     void DrawerToggle()
     {
         _drawerOpen = !_drawerOpen;
+    }
+    public void NavigateToProfile()
+    {
+        Navigation.NavigateTo("/register");
     }
 }
 

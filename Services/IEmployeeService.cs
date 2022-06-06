@@ -6,7 +6,5 @@
         Task GetEmployees();
         void AddOrUpdateEmployee(Employee employee);
         void ArchiveEmployee(Employee employee);
-
-
     }
 }

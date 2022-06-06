@@ -1,6 +1,5 @@
 using BlazorApp.Data;
 using BlazorApp.Hubs;
-using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
 using MudBlazor.Services;
 
