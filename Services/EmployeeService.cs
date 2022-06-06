@@ -1,7 +1,7 @@
 ﻿using AutoFixture;
-using Microsoft.EntityFrameworkCore;
+using BlazorApp.Data;
 
-namespace BlazorApp.Data
+namespace BlazorApp.Services
 {
     public class EmployeeService: IEmployeeService
     {

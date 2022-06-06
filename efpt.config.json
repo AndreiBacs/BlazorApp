@@ -1,5 +1,5 @@
 ﻿{
-   "CodeGenerationMode": 0,
+   "CodeGenerationMode": 2,
    "ContextClassName": "HAMMERContext",
    "ContextNamespace": null,
    "DefaultDacpacSchema": null,
@@ -16,13 +16,17 @@
       {
          "Name": "[dbo].[Employee]",
          "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[User]",
+         "ObjectType": 0
       }
    ],
-   "UiHint": "(localdb)\\MSSQLLocalDB.HAMMER",
+   "UiHint": "DEVP4B216.HAMMER",
    "UseBoolPropertiesWithoutDefaultSql": false,
    "UseDatabaseNames": false,
    "UseDbContextSplitting": false,
-   "UseFluentApiOnly": true,
+   "UseFluentApiOnly": false,
    "UseHandleBars": false,
    "UseHierarchyId": false,
    "UseInflector": false,

@@ -1,4 +1,6 @@
-﻿namespace BlazorApp.Data
+﻿using BlazorApp.Data;
+
+namespace BlazorApp.Services
 {
     public interface IEmployeeService
     {

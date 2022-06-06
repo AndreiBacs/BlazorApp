@@ -1,9 +1,8 @@
 ﻿@page "/chatroom"
 @inject NavigationManager navigationManager
-@inject ISnackbar Snackbar
+@attribute [Authorize]
 
 <PageTitle>Chat</PageTitle>
-
 
 <MudGrid Class="d-flex justify-center">
     <MudItem md="6">

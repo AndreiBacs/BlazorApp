@@ -1,8 +1,53 @@
 ﻿@page "/login"
+@using BlazorApp.Authentication
+
+@inject IUserAccountService UserAccountService
+@inject ISnackbar Snackbar
+
+@inject AuthenticationStateProvider AuthStateProvider
+@inject NavigationManager NavigationManager
+
 <PageTitle>Login</PageTitle>
 
-<h3>Login</h3>
+<EditForm Model="@model" OnValidSubmit="Authenticate">
+    <MudGrid Class="d-flex justify-center">
+        <MudItem md="5">
+            <MudCard>
+                <MudCardHeader>
+                    <MudText Typo="Typo.h2">Login</MudText>
+                </MudCardHeader>
+                <MudCardContent>
+                    <MudTextField Label="Username" HelperText="Max. 8 characters"
+                                  @bind-Value="model.UserName" For="@(() => model.UserName)" />
+                    <MudTextField Label="Password" HelperText="Choose a strong password" Class="mt-3"
+                                  @bind-Value="model.Password" For="@(() => model.Password)" InputType="InputType.Password" />
+                </MudCardContent>
+                <MudCardActions>
+                    <MudButton ButtonType="ButtonType.Button" Variant="Variant.Filled" Color="Color.Secondary" StartIcon="@Icons.Filled.AppRegistration" Href="/register">Register</MudButton>
+                    <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto">Login</MudButton>
+                </MudCardActions>
+            </MudCard>
+        </MudItem>
+    </MudGrid>
+</EditForm>
 
 @code {
+    User model = new User();
+    private async void Authenticate()
+    {
+        var account = await UserAccountService.GetUser(model);
+        if (account == null)
+        {
+            Snackbar.Add("Invalid username or password", Severity.Error);
+            return;
+        }
 
+        var customeAuthStateProvider = (CustomAuthStateProvider)AuthStateProvider;
+        await customeAuthStateProvider.UpdateAuthenticationState(new UserSession
+            {
+                UserName = account.UserName,
+                Role = account.Role,
+            });
+        NavigationManager.NavigateTo("/", true);
+    }
 }

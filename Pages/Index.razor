@@ -1,6 +1,8 @@
 ﻿@page "/"
 @inject IEmployeeService EmployeeService
+@attribute [Authorize]
 
+<PageTitle>Main</PageTitle>
 <MudGrid>
     <MudItem md="9">
         <FetchData OnSelectEmployee="OnSelectEmployee" />

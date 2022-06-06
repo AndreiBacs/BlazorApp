@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BlazorApp.Data
 {
-    public partial class Employee
+    public partial class User
     {
         [Key]
         public int Id { get; set; }
@@ -17,11 +17,12 @@ namespace BlazorApp.Data
         [Required]
         public string FirstName { get; set; }
         [Required]
-        public string Department { get; set; }
-        [Column(TypeName = "datetime")]
-        public DateTime? EntryDate { get; set; }
+        [StringLength(8, ErrorMessage = "Name length can't be more than 8.")]
+        public string UserName { get; set; }
         [Required]
-        public string Tasks { get; set; }
-        public bool IsArchived { get; set; }
+        [StringLength(30, ErrorMessage = "Password must be at least 8 characters long.", MinimumLength = 8)]
+        public string Password { get; set; }
+        [Required]
+        public string Role { get; set; }
     }
 }

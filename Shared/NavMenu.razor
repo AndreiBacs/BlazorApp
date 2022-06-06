@@ -1,6 +1,12 @@
 ﻿<MudNavMenu>
-    <MudNavLink Href="" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Home">Home</MudNavLink>
-    <MudNavLink Href="/fetchdata" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.GridOn">Employees</MudNavLink>
-    <MudNavLink Href="/chatroom" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Message">Chat</MudNavLink>
-    <MudNavLink Href="/login" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Key">Login</MudNavLink>
+    <AuthorizeView Roles="Admin">
+        <Authorized>
+            <MudNavLink Href="" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Home">Home</MudNavLink>
+            <MudNavLink Href="/fetchdata" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.GridOn">Employees</MudNavLink>
+            <MudNavLink Href="/chatroom" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Message">Chat</MudNavLink>
+        </Authorized>
+        <NotAuthorized>
+            <MudNavLink Href="/login" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Key">Login</MudNavLink>
+        </NotAuthorized>
+    </AuthorizeView>
 </MudNavMenu>
